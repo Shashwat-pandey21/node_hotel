@@ -17,8 +17,8 @@ app.get('/', (req, res) => {
 });
 
 // person Route
-const personRoutes = require('./routes/personRoute.js');
-app.use('/person', personRoutes);
+const personRoutes = require('./routes/personRoute.js'); //Import the router module from the specified file path
+app.use('/person', personRoutes);                        //Mount the router middleware to handle all incoming requests starting with the '/person' path prefix
 
 // menuItem Route
 const menuItemRoutes = require('./routes/menuItemRoutes.js');
