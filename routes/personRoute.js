@@ -50,7 +50,7 @@ router.get('/:workType', async (req, res) => {
 });
 
 //Route 4. Update a person's data by ID
-router.put('/:id' async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
         const personId = req.params.id; // Extract the ID from the URL parameter
         const updatedPersonData = req.body; // The new data sent by the client
@@ -76,7 +76,7 @@ router.put('/:id' async (req, res) => {
 });
 
 //Route 5. Delete a person by ID
-router.delete('/:id' async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const personId = req.params.id; // Extract the ID from the URL parameter
 

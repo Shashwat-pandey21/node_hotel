@@ -41,36 +41,41 @@ const personSchema = new mongoose.Schema({
     }
 });
 
-// personSchema.pre('save', async function(next){
-//     const person = this;
 
-//     // Hash the password only if it has been modified (or is new)
-//     if(!person.isModified('password')) return next();
+// 🔒 1. Pre-save hook: Hashes the password automatically before saving to MongoDB
+ personSchema.pre('save', async function(next){
+    const person = this;
 
-//     try{
-//         // hash password generation
-//         const salt = await bcrypt.genSalt(10);
+    // Hash the password only if it has been modified (or is new)
+    if(!person.isModified('password')) return next();
 
-//         // hash password
-//         const hashedPassword = await bcrypt.hash(person.password, salt);
+    try{
+        // hash password generation :- Generate a salt factor (10 rounds is the industry standard)
+        const salt = await bcrypt.genSalt(10);
+
+       // Hash the password using the generated salt 
+        const hashedPassword = await bcrypt.hash(person.password, salt);
         
-//         // Override the plain password with the hashed one
-//         person.password = hashedPassword;
-//         next();
-//     }catch(err){
-//         return next(err);
-//     }
-// })
+        // Override the plain password with the hashed one
+        person.password = hashedPassword;
+        next();
+    }
+    catch(err){
+        return next(err);
+    }
+})
 
-// personSchema.methods.comparePassword = async function(candidatePassword){
-//     try{
-//         // Use bcrypt to compare the provided password with the hashed password
-//         const isMatch = await bcrypt.compare(candidatePassword, this.password);
-//         return isMatch;
-//     }catch(err){
-//         throw err;
-//     }
-// }
+// 🔑 2. Custom Method: Compares incoming login password with the hashed DB password
+personSchema.methods.comparePassword = async function(candidatePassword){
+    try{
+        // Use bcrypt to compare the provided password with the hashed password
+        const isMatch = await bcrypt.compare(candidatePassword, this.password);
+        return isMatch;
+    }
+    catch(err){
+        throw err;
+    }
+}
 
 // Create Person model
 const Person = mongoose.model('Person', personSchema);
